@@ -6,7 +6,7 @@ from PIL import Image
 import os
 
 # Download the model from Hugging Face if not exists
-MODEL_URL = "https://huggingface.co/YOUR_USERNAME/skin-cancer-model/resolve/main/model.h5"
+MODEL_URL = "https://huggingface.co/mdshihabshorkar/skin-cancer-model/resolve/main/model.h5"
 MODEL_PATH = "model.h5"
 
 if not os.path.exists(MODEL_PATH):
