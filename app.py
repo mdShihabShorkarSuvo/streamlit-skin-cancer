@@ -30,11 +30,19 @@ def predict_image(image):
     image = image.resize((224, 224))
     image = np.array(image) / 255.0  # Normalize image
     
+    # Check image shape for debugging
+    st.write(f"Image Shape: {image.shape}")  # Debugging line
+    
     # Convert grayscale to RGB if necessary
     if image.ndim == 2:  
         image = np.stack([image] * 3, axis=-1)
     
-    image = np.expand_dims(image, axis=0)  # Add batch dimension
+    # Add batch dimension (this should be 1, 224, 224, 3)
+    image = np.expand_dims(image, axis=0)
+    
+    st.write(f"Image Shape after expansion: {image.shape}")  # Debugging line
+    
+    # Model prediction
     prediction = model.predict(image)
     
     # Process prediction (e.g., for classification output)
@@ -51,7 +59,7 @@ uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png", "jpeg
 
 if uploaded_file:
     image = Image.open(uploaded_file)
-    st.image(image, caption="Uploaded Image", use_column_width=True)
+    st.image(image, caption="Uploaded Image", use_container_width=True)
     
     if st.button("Predict"):
         predicted_class, confidence = predict_image(image)
