@@ -26,11 +26,22 @@ model = load_model()
 
 # Prediction Function
 def predict_image(image):
+    # Resize the image to match the model's expected input shape
     image = image.resize((224, 224))
-    image = np.array(image) / 255.0
-    image = np.expand_dims(image, axis=0)
+    image = np.array(image) / 255.0  # Normalize image
+    
+    # Convert grayscale to RGB if necessary
+    if image.ndim == 2:  
+        image = np.stack([image] * 3, axis=-1)
+    
+    image = np.expand_dims(image, axis=0)  # Add batch dimension
     prediction = model.predict(image)
-    return prediction
+    
+    # Process prediction (e.g., for classification output)
+    predicted_class = np.argmax(prediction, axis=-1)  # Get class index
+    confidence = np.max(prediction)  # Confidence level
+    
+    return predicted_class, confidence
 
 # Streamlit UI
 st.title("Skin Cancer Detection")
@@ -43,5 +54,5 @@ if uploaded_file:
     st.image(image, caption="Uploaded Image", use_column_width=True)
     
     if st.button("Predict"):
-        prediction = predict_image(image)
-        st.write(f"Prediction: {prediction}")
+        predicted_class, confidence = predict_image(image)
+        st.write(f"Prediction: Class {predicted_class[0]}, Confidence: {confidence:.2f}")
